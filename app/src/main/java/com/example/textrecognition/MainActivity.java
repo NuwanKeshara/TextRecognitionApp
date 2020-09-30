@@ -1,18 +1,19 @@
 package com.example.textrecognition;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,20 +31,24 @@ public class MainActivity extends AppCompatActivity {
 
     private Button snapBtn;
     private Button detectBtn;
-    Button imageBtn;
+    private Button selectBtn;
     private ImageView imageView;
-    private TextView txtView;
+    private TextView textView;
     private Bitmap imageBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_text_function);
+
         snapBtn = findViewById(R.id.snapBtn);
         detectBtn = findViewById(R.id.detectBtn);
-        imageBtn = findViewById(R.id.setImageBtn);
+        selectBtn = findViewById(R.id.selectBtn);
         imageView = findViewById(R.id.imageView);
-        txtView = findViewById(R.id.txtView);
+        textView = findViewById(R.id.textView);
+
+
+
         snapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 detectTxt();
             }
         });
-        imageBtn.setOnClickListener(new View.OnClickListener() {
+        selectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectImage();
@@ -89,12 +94,14 @@ public class MainActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             imageBitmap = (Bitmap) extras.get("data");
             imageView.setImageBitmap(imageBitmap);
+            textView.setText("");
         }
         else if(requestCode == REQUEST_IMAGE_SELECT && resultCode == RESULT_OK){
             try {
                 InputStream inputStream = getContentResolver().openInputStream(data.getData());
                 imageBitmap = BitmapFactory.decodeStream(inputStream);
                 imageView.setImageBitmap(imageBitmap);
+                textView.setText("");
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -126,15 +133,16 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "No Text :(", Toast.LENGTH_LONG).show();
             return;
         }
-      //  for (FirebaseVisionText.TextBlock block : blocks) {
+        //  for (FirebaseVisionText.TextBlock block : blocks) {
 
 
-                    String txt = text.getText();
-                    txtView.setTextSize(16);
-                    txtView.setText(txt);
+        String txt = text.getText();
+        textView.setMovementMethod(new ScrollingMovementMethod());
+        textView.setTextSize(16);
+        textView.setText(txt);
 
 
-       // }
+        // }
     }
 
 }
