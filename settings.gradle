@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name = "Text Recognition"
+rootProject.name = "ProjectPixer"
